@@ -1,53 +1,55 @@
-var userSelection = document.getElementsByTagName('button');
+const userSelection = document.getElementsByTagName('button');
 
-var newScreen = document.getElementById("new-screen");
-var oldScreen = document.getElementById("old-screen")
+const upScreen = document.getElementById("up-screen");
+const downScreen = document.getElementById("down-screen");
 
-var oldNumber;
-var operator;
+let firstNumber; // operadores
+let operator;
 
 // show in screen
 function insertScreen(addNumber) {
-    let number = document.getElementById("new-screen").innerHTML;
-    document.getElementById("new-screen").innerHTML = number + addNumber;
+    let numeberScreen = document.getElementById("up-screen").innerHTML;
+    document.getElementById("up-screen").innerHTML = numeberScreen + addNumber; // concatenate
     return;
 }
 // clear screen
 function clear() {
-    document.getElementById("new-screen").innerHTML = "";
-    document.getElementById("old-screen").innerHTML = "";
+    document.getElementById("up-screen").innerHTML = "";
+    document.getElementById("down-screen").innerHTML = "";
+    operator = undefined;
     return;
 }
 // remove numbers 
 function removeNumber() {
-    let screen = document.getElementById("new-screen").innerHTML
-    document.getElementById("new-screen").innerHTML = screen.substring(0, screen.length -1)
+    let numeberScreen = document.getElementById("up-screen").innerHTML;
+    document.getElementById("up-screen").innerHTML = numeberScreen.substring(0, numeberScreen.length -1);
 }
 
-function calculate(operator, newNumber) {
+function calculate(operator, secondNumber) {
+    let calculed = true;
     switch (operator) {        
         case "+":
-            newScreen.innerHTML = Number(oldNumber) + Number(newNumber); 
+            upScreen.innerHTML = Number(firstNumber) + Number(secondNumber); 
             break;        
         case "-":
-            newScreen.innerHTML = Number(oldNumber) - Number(newNumber);        
+            upScreen.innerHTML = Number(firstNumber) - Number(secondNumber);        
             break;        
         case "/":
-            newScreen.innerHTML = Number(oldNumber) / Number(newNumber);  
+            upScreen.innerHTML = Number(firstNumber) / Number(secondNumber);  
             break; 
         case "x":
-            newScreen.innerHTML = Number(oldNumber) * Number(newNumber);     
+            upScreen.innerHTML = Number(firstNumber) * Number(secondNumber);     
             break;
         default:
+            calculed = false; 
             break;
     }
-
-    oldScreen.innerHTML = oldScreen.innerHTML + " " + newNumber;
-    operator = "";
-    oldNumber = "";
+    if(calculed) {
+        downScreen.innerHTML = downScreen.innerHTML + " " + secondNumber;
+    }
 }
 
-for (var i = 0; i < userSelection.length; i++) {
+for (let i = 0; i < userSelection.length; i++) {
     (function (button) {
         userSelection[button].addEventListener("click", function () {
 
@@ -57,18 +59,19 @@ for (var i = 0; i < userSelection.length; i++) {
                     break;
 
                 case "operators":
-                    if (newScreen.innerHTML != "" && operator != "") {
+                    if (upScreen.innerHTML != "" && operator === undefined) {
                         operator = userSelection[button].innerHTML;
-                        oldNumber = document.getElementById("new-screen").innerHTML;
-                        document.getElementById("old-screen").innerHTML = oldNumber + " " + operator;
+
+                        firstNumber = document.getElementById("up-screen").innerHTML;
     
-                        document.getElementById("new-screen").innerHTML = "";
-                    } 
+                        document.getElementById("down-screen").innerHTML = firstNumber + " " + operator;
+                        document.getElementById("up-screen").innerHTML = "";
+                    }
                     break;
 
                 case "calculate":
-                    let newNumber = document.getElementById("new-screen").innerHTML;
-                    calculate(operator, newNumber);
+                    calculate(operator, upScreen.innerHTML);
+                    operator = undefined;
                     break;
 
                 case "clear":
@@ -81,7 +84,7 @@ for (var i = 0; i < userSelection.length; i++) {
 
                 default:
                     break;
-            }
-        })
+            };
+        });
     })(i);
-}
+};
